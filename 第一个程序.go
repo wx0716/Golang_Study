@@ -1,8 +1,9 @@
-package main //引入主函数包
+package main
 
-import f "fmt" //引入输入输出函数，并取别名为f
+import "fmt"
 
-// 定义主函数main并打印文本输出
 func main() {
-	f.Print("Hello,World")
+	fmt.Print("Hello,World")
+	fmt.Printf("Hello,World")
+	fmt.Println("Hello,World")
 }
