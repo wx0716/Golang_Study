@@ -33,9 +33,7 @@ Go的语法接近C语言，但对于变量的声明有所不同。Go支持垃圾
 
 ### 3.Golang语言的环境搭建
 
-- 下载Golang解释器
-
-<a href="https:golang.dev" title="Golang官网地址">Golang官网地址</a>
+> <a href="https:golang.dev" title="Golang官网地址">下载Golang解释器</a>
 
 官网截图：
 
