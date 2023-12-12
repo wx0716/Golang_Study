@@ -35,4 +35,19 @@ lex是用于生成词法分析器的工具，lex生成的代码能够将一个�
     [0-9]+ printf("NUMBER ");
     [a-zA-Z_]+ printf("IDENT ");
     %%
-    ```
+```
+
+这个定义好的文件能够解析`package`和`import`关键字、常见的特俗字符、数字以及标识符，虽然这里的规则可能有一些简陋和不完善，但是用来解析下面的这一段代码还是比较轻松的：
+
+```go
+package main
+
+import ""
+(
+fmt)
+
+func main() {
+	fmt.Println("Hello")
+}
+```
+
