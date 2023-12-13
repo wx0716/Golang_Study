@@ -51,3 +51,53 @@ func main() {
 }
 ```
 
+`.l`结尾的lex代码并不能直接运行，我们首先需要通过`lex`命令将上面的`simplego.l`展开成C语言代码，这里可以直接执行如下所示的命令编译并打印文件的内容：
+
+```c
+$ lex simplego.l
+$ cat lex.yy.c
+...
+int yylex (void) {
+	...
+	while ( 1 ) {
+		...
+yy_match:
+		do {
+			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
+			if ( yy_accept[yy_current_state] ) {
+				(yy_last_accepting_state) = yy_current_state;
+				(yy_last_accepting_cpos) = yy_cp;
+			}
+			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state ) {
+				yy_current_state = (int) yy_def[yy_current_state];
+				if ( yy_current_state >= 30 )
+					yy_c = yy_meta[(unsigned int) yy_c];
+				}
+			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
+			++yy_cp;
+		} while ( yy_base[yy_current_state] != 37 );
+		...
+
+do_action:
+		switch ( yy_act )
+			case 0:
+    			...
+
+			case 1:
+    			YY_RULE_SETUP
+    			printf("PACKAGE ");
+    			YY_BREAK
+			...
+}
+```
+
+`lex.yy.c`的前600行基本都是宏和函数的声明和定义，后面生成的代码大都是为`yylex`这个函数服务的，这个函数使用**有限自动机**
+的程序结构来分析输入的字符流，上述代码中`while`
+循环就是这个有限自动机的主体，你如果仔细看这个文件生成的代码会发现当前的文件中并不存在`main`函数，`main`函数是在`liblex`
+库中定义的，所以在编译时其实需要添加额外的`-ll`选项：
+
+```shell
+$ cc lex.yy.c -o simplego -ll
+$ cat main.go | ./simplego
+```
+
