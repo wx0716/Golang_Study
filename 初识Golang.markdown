@@ -37,7 +37,7 @@ Go的语法接近C语言，但对于变量的声明有所不同。Go支持垃圾
 
 官网截图：
 
-![img.png](img.png)
+![img.png](assets/img.png)
 
 - Linux系统安装
 
@@ -64,7 +64,7 @@ export PATH=$PATH:$GOROOT/bin
 
 修改`/etc/profile`后要重启生效，修改`$HOME/.profile`后使用`source`命令加载`$HOME/.profile`文件即可生效。 检查：
 
-![img_2.png](img_2.png)
+![img_2.png](assets/img_2.png)
 
 ### 4.GOROOT和GOPATH
 

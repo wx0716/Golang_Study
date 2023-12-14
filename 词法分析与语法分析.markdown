@@ -101,3 +101,47 @@ $ cc lex.yy.c -o simplego -ll
 $ cat main.go | ./simplego
 ```
 
+当我们将C语言代码通过gcc编译成二进制代码之后，就可以使用管道将上面提到的Golang语言代码作为输入传递待生成的词法分析器中，这个词法分析器会打印出如下的内容：
+
+```go
+PACKAGE  IDENT
+
+IMPORT  LPAREN
+QUOTE IDENT QUOTE
+RPAREN
+
+IDENT  IDENT LPAREN RPAREN  LBRACE
+IDENT DOT IDENT LPAREN QUOTE IDENT QUOTE RPAREN
+RBRACE
+```
+
+从上面的输出我们能看到Golang源代码的影子，lex生成的词法分析器lexer通过正则匹配的方式将机器原本很难理解的字符串进行分解成很多的Token，有利于后面的处理。
+
+![img_3.png](assets/img_3.png)
+
+到这里我们已经展示了从定义`.l`文件、使用`lex`将`.l`
+文件编译成C语言代码以及二进制代码的全过程，而最后生成的词法分析器也能够简单的将Golang语言代码进行转换成Token序列。lex的使用还是比较简单的，我们可以使用它快速实现词法分析器。
+
+### Golang
+
+Golang语言的词法解析是通过`src/cmd/compile/internal/syntax/scanner.go`文件中的`cmd/compile/internal/syntax.scanner`
+结构体实现的，这个结构体会持有当前扫描的数据源文件、启用的模式和当前被扫描的Token：
+
+```go
+type scanner struct {
+source
+mode   uint
+nlsemi bool
+
+// current token, valid after calling next()
+line, col uint
+blank     bool // line is blank up to col
+tok       token
+lit       string  // valid if tok is _Name, _Literal, or _Semi ("semicolon", "newline", or "EOF"); may be malformed if bad is true
+bad       bool    // valid if tok is _Literal, true if a syntax error occurred, lit may be malformed
+kind      LitKind // valid if tok is _Literal
+op        Operator // valid if tok is _Operator, _AssignOp, or _IncOp
+prec      int      // valid if tok is _Operator, _AssignOp, or _IncOp
+}
+```
+
