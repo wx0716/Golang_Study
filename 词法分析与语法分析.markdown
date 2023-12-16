@@ -145,3 +145,106 @@ prec      int      // valid if tok is _Operator, _AssignOp, or _IncOp
 }
 ```
 
+`src/cmd/compile/internal/syntax/tokens.go`
+文件中定义了Golang语言支持的全部Token类型，所有的Token类型都是正整数，你可以在这个文件中找到一些常见Token的定义。例如：操作符、括号和关键字等：
+
+```go
+const (
+_    token = iota
+_EOF // EOF
+
+// operators and operations
+_Operator // opq
+...
+
+// delimiters
+_Lparen // (
+_Lbrack // [
+...
+
+// keywords
+_Break // break
+...
+_Type // type
+_Var  // var
+
+tokenCount //
+)
+```
+
+从Golang语言中定义的Token类型，我们可以将语言中的元素分成几个不同的类别，分别是名称和字面量、操作符、分割符和关键字。词法分析主要是由` cmd/compile/internal/syntax.scanner `
+这个结构体中的`cmd/compile/internal/syntax.scanner.next`方法驱动，这个250行函数的主体是一个`switch/case`结构：
+
+```go
+func (s *scanner) next() {
+...
+s.stop()
+startLine, startCol := s.pos()
+for s.ch == ' ' || s.ch == '\t' || s.ch == '\n' && !nlsemi || s.ch == '\r' {
+s.nextch()
+}
+
+s.line, s.col = s.pos()
+s.blank = s.line > startLine || startCol == colbase
+s.start()
+if isLetter(s.ch) || s.ch >= utf8.RuneSelf && s.atIdentChar(true) {
+s.nextch()
+s.ident()
+return
+}
+
+switch s.ch {
+case -1:
+s.tok = _EOF
+
+case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
+s.number(false)
+...
+}
+}
+```
+
+`cmd/compile/internal/syntax.scanner`每次都会通过`cmd/compile/internal/syntax.source.nextch`
+函数获取文件中最近的未被解析的字符，然后根据当前字符的不同执行不同的case，如果遇到了空格和换行符这些空白字符会直接跳过，如果当前字符是0就会执行`cmd/compile/internal/syntax.scanner.number`
+方法尝试匹配一个数字：
+
+```go
+func (s *scanner) number(seenPoint bool) {
+kind := IntLit
+base := 10 // number base
+digsep := 0
+invalid := -1 // index of invalid digit in literal, or < 0
+
+s.kind = IntLit
+if !seenPoint {
+digsep |= s.digits(base, &invalid)
+}
+
+s.setLit(kind, ok)
+}
+
+func (s *scanner) digits(base int, invalid *int) (digsep int) {
+max := rune('0' + base)
+for isDecimal(s.ch) || s.ch == '_' {
+ds := 1
+if s.ch == '_' {
+ds = 2
+} else if s.ch >= max && *invalid < 0 {
+_, col := s.pos()
+*invalid = int(col - s.col) // record invalid rune index
+}
+digsep |= ds
+s.nextch()
+}
+return
+}
+```
+
+上述的`cmd/compile/internal/syntax.scanner.number`
+方法省略了很多的代码，包括如何匹配浮点数、指数和复数，我们只是简单看一下词法分析匹配整数的逻辑：在for循环中不断获取最新的字符，通过`cmd/compile/internal/syntax.source.nextch`
+方法追加到`cmd/compile/internal/syntax.scanner`持有的缓存区中；当前包中的词法分析器`cmd/compile/internal/syntax.scanner`
+也只是为上层提供了`cmd/compile/internal/syntax.scanner.next`
+方法，词法解析的过程都是惰性的，只有在上层的解析器需要时才会调用`cmd/compile/internal/syntax.scanner.next`获取最新的Token。
+
+Golang语言的词法元素相对来说还是比较简单的，使用这种巨大的`switch/case`
+进行词法解析也比较方便和顺手，早期的Golang语言虽然使用lex这种工具来生成词法解析器，但是最后还是使用Golang来实现词法分析器，用自己写的词法分析器来解析自己。
