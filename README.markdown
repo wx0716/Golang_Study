@@ -1,4 +1,4 @@
-1. <a href="初识Golang.markdown">初识Golang.markdown</a>
+1. <a href="初识Golang.markdown">初识Golang语言</a>
 2.
 
 ## Star History
