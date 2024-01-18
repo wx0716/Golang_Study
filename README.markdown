@@ -3,4 +3,5 @@
 3. [Golang语言为并发而生](Golang%E8%AF%AD%E8%A8%80%E4%B8%BA%E5%B9%B6%E5%8F%91%E8%80%8C%E7%94%9F.markdown)
 4. [Golang安装目录](Golang%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95.markdown)
 5. [Golang运行时(runtime)](Golang%E8%BF%90%E8%A1%8C%E6%97%B6%28runtime%29.md)
+6. [构建并运行Golang程序](%E6%9E%84%E5%BB%BA%E5%B9%B6%E8%BF%90%E8%A1%8CGolang%E7%A8%8B%E5%BA%8F.md)
 
