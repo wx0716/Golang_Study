@@ -1,0 +1,3 @@
+gofmt -r '(a) -> a' –w *.go
+gofmt -r 'a[n:len(a)] -> a[n:]' –w *.go
+gofmt –r 'A.Func1(a,b) -> A.Func2(b,a)' –w *.go

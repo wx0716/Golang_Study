@@ -4,4 +4,4 @@
 4. [Golang安装目录](Golang%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95.markdown)
 5. [Golang运行时(runtime)](Golang%E8%BF%90%E8%A1%8C%E6%97%B6%28runtime%29.md)
 6. [构建并运行Golang程序](%E6%9E%84%E5%BB%BA%E5%B9%B6%E8%BF%90%E8%A1%8CGolang%E7%A8%8B%E5%BA%8F.md)
-
+7. [格式化代码](%E6%A0%BC%E5%BC%8F%E5%8C%96%E4%BB%A3%E7%A0%81.md)
