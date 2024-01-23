@@ -42,3 +42,28 @@ func Seed(i int) {
 ```
 
 C当中并没有明确的字符串类型，如果你想要将一个`string`类型的变量从Golang转换到C时，可以使用`C.CString(s)`；同样，可以使用`C.GoString(cs)`从C转换到Golang中的`string`类型。
+
+Golang的内存管理机制无法管理通过C代码分配的内存。
+
+开发人员需要通过手动调用`C.free`来释放变量的内存：
+
+```go
+defer C.free(unsafe.Pointer(Cvariable))
+```
+
+这一行最好紧跟在使用C代码创建某个变量之后，这样就不会忘记释放内存了。下面的代码展示了如何使用cgo创建变量、使用并释放其内存：
+
+```go
+package print
+
+// #include <stdio.h>
+// #include <stdlib.h>
+import "C"
+import "unsafe"
+
+func Print(s string) {
+	cs := C.CString(s)
+	defer C.free(unsafe.Pointer(cs))
+	C.fputs(cs, (*C.FILE)(C.stdout))
+}
+```
