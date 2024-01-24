@@ -67,3 +67,28 @@ func Print(s string) {
 	C.fputs(cs, (*C.FILE)(C.stdout))
 }
 ```
+
+**构建cgo包**
+
+你可以在使用Makefile文件(因为我们使用了一个独立的包)，除了使用变量`GOFILES`之外，还需要使用变量`CGOFILES`来列出需要使用cgo编译的文件列表。例如，下面的代码就可以使用包含以下内容的`Makefile`文件来编译，你可以使用`gomake`或`make`:
+
+```shell
+include $(GOROOT)/src/Make.inc
+TARG=rand
+CGOFILES=\
+c1.go\
+include $(GOROOT)/src/Make.pkg
+```
+
+### Golang与C++进行交互
+
+SWIG（简化封装器和接口生成器）支持在Linux系统下使用Golang代码调用C或者C++代码。这里有一些使用SWIG的注意事项：
+
+* 编写需要封装的库的SWIG接口；
+* SWIG会产生C的存根函数；
+* 这些库可以使用cgo来调用；
+* 相关的Golang文件也可以被自动生成
+
+这类接口支持方法重载、多重继承已经使用Golang代码实现C++的抽象类。
+
+目前使用SWIG存在的一个问题是它无法支持所有的C++库，比如TObject.h。
