@@ -8,7 +8,7 @@ Golang语言的并发是基于Goroutine的，Goroutine类似于线程，但并�
 
 程序可以将需要并发的环节设计为生产者模式和消费者模式，将数据放入通道。通道另外一断的代码将这些数据进行并发计算并返回结果，如下所示：
 
-![img.png](assets/img.png)
+![img.png](../assets/img.png)
 
 实例：生产者每秒生成一个字符串，并通过通道传递给消费者，生产者使用两个Goroutine并发运行，消费者在main()函数的Goroutine()
 中进行处理
