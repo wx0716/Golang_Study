@@ -1,4 +1,4 @@
-package rand
+package trans
 
 // #include <stdlib.h>
 import "C"

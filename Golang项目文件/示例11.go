@@ -1,9 +1,9 @@
-package main
+package trans
 
 import (
 	"fmt"
-   "runtime"
 	"os"
+	"runtime"
 )
 
 func main() {

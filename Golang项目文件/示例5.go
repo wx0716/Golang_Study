@@ -2,4 +2,4 @@
 //
 // Experience has shown that a small number of procedures can prove
 // helpful when attempting to save the world.
-package main
+package trans
